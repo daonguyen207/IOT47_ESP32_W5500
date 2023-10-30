@@ -48,8 +48,20 @@ void setup()
 
   WiFi.onEvent(ETH_event);
   WiFi.onEvent(ETH_gotIP, WiFiEvent_t::ARDUINO_EVENT_ETH_GOT_IP);
+  
+  // WiFi.mode(WIFI_STA);
+  // WiFi.begin("wifi", "pass");
+  // Serial.print("Connecting to WiFi ..");
+  // while (WiFi.status() != WL_CONNECTED) {
+  //   Serial.print('.');
+  //   delay(1000);
+  // }
+  // Serial.println(WiFi.localIP());
 
-  w5500_set_statc_ip("192.168.1.133","192.168.1.1","255.255.255.0","8.8.8.8","8.8.4.4");
+  uint8_t base_mac_addr[6];
+  esp_efuse_mac_get_default(base_mac_addr); base_mac_addr[4]++;base_mac_addr[5]++;
+  w5500_set_mac(base_mac_addr);
+  w5500_set_statc_ip("192.168.1.13","192.168.1.1","255.255.255.0","8.8.8.8","8.8.4.4");
   w5500_begin(W5500_MOSI,W5500_MISO,W5500_SCLK,W5500_CS,W5500_RST,W5500_INT);
 }
 
