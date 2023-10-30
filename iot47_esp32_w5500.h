@@ -22,7 +22,25 @@ uint32_t W5500_SPI_HOST      = 1;
 uint32_t W5500_SPI_CLOCK_MHZ = 12000000;
 char *dns1;
 char *dns2;
-
+uint8_t mac_data[6] = {0x02, 0x00, 0x00, 0x12, 0x34, 0x56};
+void w5500_set_mac(uint8_t * mac)
+{
+  mac_data[0] = mac[0];
+  mac_data[1] = mac[1];
+  mac_data[2] = mac[2];
+  mac_data[3] = mac[3];
+  mac_data[4] = mac[4];
+  mac_data[5] = mac[5];
+}
+void w5500_set_mac(uint8_t b1,uint8_t b2,uint8_t b3,uint8_t b4,uint8_t b5,uint8_t b6)
+{
+  mac_data[0] = b1;
+  mac_data[1] = b2;
+  mac_data[2] = b3;
+  mac_data[3] = b4;
+  mac_data[4] = b5;
+  mac_data[5] = b6;
+}
 void w5500_set_statc_ip( char* ip,char* gateway,char* netmask,char* _dns1, char* _dns2)
 {
   esp_netif_str_to_ip4((const char *)ip,&info_t.ip);
@@ -151,7 +169,6 @@ void w5500_begin(int mosi_pin,int miso_pin,int sclk_pin,int cs_pin,int rst_pin,i
   esp_eth_config_t eth_config_spi = ETH_DEFAULT_CONFIG(mac_spi, phy_spi);
   ESP_ERROR_CHECK(esp_eth_driver_install(&eth_config_spi, &eth_handle_spi));
 
-  uint8_t mac_data[6] = {0x02, 0x00, 0x00, 0x12, 0x34, 0x56};
   ESP_ERROR_CHECK(esp_eth_ioctl(eth_handle_spi, ETH_CMD_S_MAC_ADDR,mac_data));
 
   // attach Ethernet driver to TCP/IP stack
